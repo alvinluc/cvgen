@@ -14,6 +14,6 @@ $ yarn
 $ yarn gen <filetype> <filename>
 ```
 
-<filetype> is one of pdf, doc, txt
-<filename> is one of files in doc folder without the markdown extension. e.g john-doe
+`filetype` is one of pdf, doc, txt
+`filename` is one of files in doc folder without the markdown extension. e.g john-doe
 
