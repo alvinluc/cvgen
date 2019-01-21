@@ -1,0 +1,14 @@
+{
+  "name": "cv-generator",
+  "version": "0.0.1",
+  "description": "CV Generator",
+  "main": "cv.js",
+  "scripts": {
+    "gen": "ts-node src/App.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.18",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  }
+}
