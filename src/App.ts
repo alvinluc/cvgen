@@ -1,19 +1,15 @@
 import { DocumentFactory } from "./DocumentFactory";
 
-const { argv } = process;
-const argumentLength = argv.length;
+parseArguments(process.argv)
 
-if (argumentLength > 3) {
-  const fileName = argv[3].toLowerCase();
-  const fileType = argv[2].toLowerCase();
 
+function parseArguments(args : string[]) {
+  if (args.length < 4) return;
+
+  const fileName = args[2].toLowerCase();
+  const fileType = args[3].toLowerCase();
+  
   const factory = new DocumentFactory();
   const document = factory.createDocument(fileType);
-
   document.generate(fileName);
-
-
-} else {
-  console.log("Invalid arguments. Please check again");
 }
-

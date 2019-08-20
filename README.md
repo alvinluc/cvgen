@@ -1,19 +1,20 @@
 # CV Generator
 
-This requires Node.js, Yarn, Pandoc and Latex to be globally installed.
+This project requires Node.js, Pandoc and Latex to be installed.
 
 ## Setup:
 
 ```sh
-$ yarn
+$ npm i
 ```
 
 ## Generation:
 
 ```sh
-$ yarn gen <filetype> <filename>
+$ npm run cv <filetype> <filename>
 ```
 
-`filetype` is one of pdf, doc, txt
-`filename` is one of files in doc folder without the markdown extension. e.g john-doe
+:where `filename` is one of files in doc folder without the markdown extension. e.g john-doe
+:where `filetype` is one of pdf, doc, txt
+
 

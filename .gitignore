@@ -4,5 +4,6 @@ docs/*.md
 *.lock
 *.pdf
 *.text
+*.txt
 *.doc[x]
 *.html
