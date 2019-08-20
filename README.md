@@ -14,7 +14,8 @@ $ npm i
 $ npm run cv <filetype> <filename>
 ```
 
-:where `filename` is one of files in doc folder without the markdown extension. e.g john-doe
-:where `filetype` is one of pdf, doc, txt
+> `filename` is one of files in doc folder without the markdown extension. e.g john-doe
+
+> `filetype` is one of pdf, doc, txt
 
 
