@@ -1,7 +1,7 @@
-node_modules
-docs/*.md
-!docs/john-doe.md
-*.lock
+Application/bin/
+Application/obj/
+in/*.md
+!in/john-doe.md
 *.pdf
 *.text
 *.txt

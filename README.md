@@ -1,17 +1,13 @@
 # CV Generator
 
-This project requires Node.js, Pandoc and Latex to be installed.
+This project requires .NET Core, Pandoc and Latex to be installed which will be automatically installed if using devContainers.
 
-## Setup:
-
-```sh
-$ npm i
-```
 
 ## Generation:
 
 ```sh
-$ npm run cv <filetype> <filename>
+$ cd Application
+$ dotnet run <filename>
 ```
 
 > `filename` is one of files in doc folder without the markdown extension. e.g john-doe
