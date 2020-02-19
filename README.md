@@ -7,11 +7,11 @@ This project requires .NET Core, Pandoc and Latex to be installed which will be 
 
 ```sh
 $ cd Application
-$ dotnet run <filename>
+$ dotnet run <filename> <filetype>
 ```
 
 > `filename` is one of files in doc folder without the markdown extension. e.g john-doe
 
-> `filetype` is one of pdf, doc, txt
+> `filetype` is one of pdf, docx, txt
 
 
