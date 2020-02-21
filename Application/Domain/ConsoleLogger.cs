@@ -9,5 +9,4 @@ namespace Application.Domain
             Console.WriteLine(message);
         }
     }
-
 }

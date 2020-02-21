@@ -1,12 +1,11 @@
 using System;
 using System.Diagnostics;
 
-
 namespace Application.Domain
 {
     public class ProcessCommand : ICommand
     {
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public ProcessCommand(ILogger logger)
         {
@@ -32,15 +31,11 @@ namespace Application.Domain
                 process.Start();
                 process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
-
-
             }
             catch (Exception e)
             {
                 _logger.Log(e.Message);
             }
         }
-
     }
-
 }

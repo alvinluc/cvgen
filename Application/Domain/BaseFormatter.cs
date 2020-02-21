@@ -7,8 +7,8 @@ namespace Application.Domain
     {
         protected readonly string currentDirectory;
         protected readonly string inPath;
-        protected readonly string templatesPath;
         protected readonly string outPath;
+        protected readonly string templatesPath;
 
         protected BaseFormatter()
         {
@@ -20,5 +20,4 @@ namespace Application.Domain
 
         public abstract string Generate(string filePath);
     }
-
 }

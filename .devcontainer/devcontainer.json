@@ -4,7 +4,9 @@
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
+	"postCreateCommand": "dotnet restore Application",
 	"extensions": [
-		"ms-vscode.csharp"
+		"ms-vscode.csharp",
+		"james-yu.latex-workshop"
 	]
 }

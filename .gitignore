@@ -7,3 +7,4 @@ in/*.md
 *.txt
 *.doc[x]
 *.html
+*.vs/

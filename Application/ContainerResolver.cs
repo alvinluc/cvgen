@@ -1,9 +1,9 @@
 using Application.Domain;
 using Autofac;
 
-namespace Application 
+namespace Application
 {
-    internal static class ContainerResolver 
+    internal static class ContainerResolver
     {
         internal static IContainer RegisterContainer()
         {

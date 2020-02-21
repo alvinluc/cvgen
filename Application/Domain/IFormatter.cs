@@ -4,5 +4,4 @@ namespace Application.Domain
     {
         string Generate(string filePath);
     }
-
 }

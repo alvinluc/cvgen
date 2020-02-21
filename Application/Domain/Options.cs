@@ -15,8 +15,6 @@ namespace Application.Domain
         [Option("txt", Required = false, HelpText = "Convert to Txt format")]
         public bool Txt { get; set; }
 
-        [Value(0)]
-        public string FileName { get; set;}
-
+        [Value(0)] public string FileName { get; set; }
     }
 }
