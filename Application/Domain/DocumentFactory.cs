@@ -1,20 +1,13 @@
 namespace Application.Domain
 {
-    public class DocumentFactory : IFormatFactory
+    public class DocumentFactory : IDocumentFactory
     {
-        public IFormatter Create(string formatType)
+        public IFormatter Create(Options opts)
         {
-            switch (formatType)
-            {
-                case "pdf":
-                    return new PdfFormatter();
-                case "docx":
-                    return new DocXFormatter();
-                case "txt":
-                    return new TextFormatter();
-                default:
-                    return new PdfFormatter();
-            }
+
+            if (opts.Docx) return new DocXFormatter();
+            if (opts.Txt) return new TextFormatter();
+            else return new PdfFormatter();
         }
     }
 }

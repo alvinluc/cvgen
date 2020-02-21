@@ -12,6 +12,6 @@ $ dotnet run <filename> <filetype>
 
 > `filename` is one of files in doc folder without the markdown extension. e.g john-doe
 
-> `filetype` is one of pdf, docx, txt
+> `filetype` is one of pdf, docx, txt. This can be omitted and will default to pdf.
 
 
