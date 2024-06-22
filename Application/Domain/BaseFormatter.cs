@@ -12,7 +12,10 @@ namespace Application.Domain
 
         protected BaseFormatter()
         {
-            currentDirectory = Directory.GetParent(Environment.CurrentDirectory).ToString();
+            currentDirectory = Environment.CurrentDirectory;
+            var parentDirectory = Directory.GetParent(currentDirectory) ?? throw new DirectoryNotFoundException("Parent directory not found");
+            currentDirectory = parentDirectory.ToString();
+
             inPath = $"{currentDirectory}/in";
             outPath = $"{currentDirectory}/out";
             templatesPath = $"{currentDirectory}/templates";

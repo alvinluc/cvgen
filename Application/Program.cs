@@ -1,5 +1,6 @@
-﻿using Application.Domain;
-using Autofac;
+﻿using System;
+using Application.Domain;
+using Microsoft.Extensions.DependencyInjection;
 using CommandLine;
 
 namespace Application
@@ -8,30 +9,24 @@ namespace Application
     {
         private static void Main(string[] args)
         {
-            Parser.Default.ParseArguments<Options>(args)
-                .WithParsed(RunOptions);
+            Console.WriteLine("Starting..");
+            var services = CreateServiceProvider();
+            var processor = services.GetRequiredService<Processor>();
+            Parser.Default.ParseArguments<Options>(args).WithParsed(processor.Run);
         }
 
-        private static void RunOptions(Options opts)
+
+        private static ServiceProvider CreateServiceProvider()
         {
-            var container = ContainerResolver.RegisterContainer();
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<ILogger, ConsoleLogger>()
+                .AddSingleton<ICommand, ProcessCommand>()
+                .AddSingleton<IDocumentFactory, DocumentFactory>()
+                .AddSingleton<Processor>()
+                .BuildServiceProvider();
 
-            using (var scope = container.BeginLifetimeScope())
-            {
-                if (!string.IsNullOrWhiteSpace(opts.FileName))
-                {
-                    var command = scope.Resolve<ICommand>();
-                    var documentFactory = scope.Resolve<IDocumentFactory>();
-                    var formatter = documentFactory.Create(opts);
-                    var commandToExecute = formatter.Generate(opts.FileName);
-                    command.Execute(commandToExecute);
-                }
-                else
-                {
-                    var logger = scope.Resolve<ILogger>();
-                    logger.Log("Please supply a valid file name");
-                }
-            }
+            return serviceProvider;
         }
+
     }
 }

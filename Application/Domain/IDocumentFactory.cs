@@ -2,6 +2,6 @@ namespace Application.Domain
 {
     public interface IDocumentFactory
     {
-        IFormatter Create(Options opts);
+        IFormatter Create(string? fileFormat);
     }
 }

@@ -2,12 +2,12 @@ namespace Application.Domain
 {
     public class DocumentFactory : IDocumentFactory
     {
-        public IFormatter Create(Options opts)
+        public IFormatter Create(string? fileFormat)
         {
-            if (opts.FileFormat.ToLower() == "doc" || opts.FileFormat.ToLower() == "docx") 
+            if (fileFormat?.ToLower() == "doc" || fileFormat?.ToLower() == "docx") 
                 return new DocXFormatter();
 
-            if (opts.FileFormat.ToLower() == "txt" || opts.FileFormat.ToLower() == "text") 
+            if (fileFormat?.ToLower() == "txt" || fileFormat?.ToLower() == "text") 
                 return new TextFormatter();
                 
             return new PdfFormatter();
