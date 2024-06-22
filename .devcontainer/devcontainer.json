@@ -1,12 +1,17 @@
 {
 	"name": "CV Generator",
-	"dockerFile": "Dockerfile",
-	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
+	"build": {
+		"dockerfile": "Dockerfile"
 	},
-	"postCreateCommand": "dotnet restore Application",
-	"extensions": [
-		"ms-vscode.csharp",
-		"james-yu.latex-workshop"
-	]
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-dotnettools.csdevkit",
+				"james-yu.latex-workshop",
+				"FullStackSpider.visual-nuget"
+			]
+		},
+		"postCreateCommand": "dotnet restore Application"
+	}
+
 }
