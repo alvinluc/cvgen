@@ -14,7 +14,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Application.Domain.Parsing
 {
-    public class MarkdownParser : IMarkdownParser
+    public partial class MarkdownParser : IMarkdownParser
     {
         private readonly MarkdownPipeline _pipeline;
         private readonly MarkdownPipeline _inlinePipeline;
@@ -33,7 +33,7 @@ namespace Application.Domain.Parsing
         {
             var markdown = File.ReadAllText(filePath);
             // Markdig requires `:   ` (3+ spaces) for definition lists; normalize `: ` to `:   `
-            markdown = Regex.Replace(markdown, @"^: (\S)", ":   $1", RegexOptions.Multiline);
+            markdown = MyRegex().Replace(markdown, ":   $1");
             var document = Markdown.Parse(markdown, _pipeline);
 
             var cv = new CvDocument();
@@ -68,11 +68,12 @@ namespace Application.Domain.Parsing
                         cv.Sections.Add(currentSection);
                         currentSubSection = null;
                     }
-                    else if (heading.Level == 2 && currentSection != null)
+                    else if (heading.Level >= 2 && heading.Level <= 4 && currentSection != null)
                     {
                         currentSubSection = new CvSubSection
                         {
-                            Title = ParseInlines(heading.Inline)
+                            Title = ParseInlines(heading.Inline),
+                            Level = heading.Level
                         };
                         currentSection.SubSections.Add(currentSubSection);
                     }
@@ -185,7 +186,7 @@ namespace Application.Domain.Parsing
             return new List<InlineContent> { new InlineContent { Text = text } };
         }
 
-        private static List<InlineContent> ParseInlines(ContainerInline? container)
+        private static List<InlineContent> ParseInlines(ContainerInline? container, bool parentBold = false, bool parentItalic = false)
         {
             var result = new List<InlineContent>();
             if (container == null) return result;
@@ -203,29 +204,25 @@ namespace Application.Domain.Parsing
                     result.Add(new InlineContent
                     {
                         Text = linkText,
-                        Url = link.Url
+                        Url = link.Url,
+                        IsBold = parentBold,
+                        IsItalic = parentItalic
                     });
                 }
                 else if (inline is LiteralInline literal)
                 {
                     result.Add(new InlineContent
                     {
-                        Text = literal.Content.ToString()
+                        Text = literal.Content.ToString(),
+                        IsBold = parentBold,
+                        IsItalic = parentItalic
                     });
                 }
                 else if (inline is EmphasisInline emphasis)
                 {
-                    // Flatten emphasis content
-                    foreach (var child in emphasis)
-                    {
-                        if (child is LiteralInline lit)
-                        {
-                            result.Add(new InlineContent
-                            {
-                                Text = lit.Content.ToString()
-                            });
-                        }
-                    }
+                    var isBold = parentBold || emphasis.DelimiterCount >= 2;
+                    var isItalic = parentItalic || emphasis.DelimiterCount == 1 || emphasis.DelimiterCount == 3;
+                    result.AddRange(ParseInlines(emphasis, isBold, isItalic));
                 }
             }
 
@@ -240,5 +237,9 @@ namespace Application.Domain.Parsing
                 section.Content.Add(content);
             // Content before any section is ignored
         }
+
+        [GeneratedRegex(@"^: (\S)", RegexOptions.Multiline)]
+        private static partial Regex MyRegex();
+
     }
 }

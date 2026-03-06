@@ -8,3 +8,4 @@ in/*.md
 *.doc[x]
 *.html
 *.vs/
+.claude/

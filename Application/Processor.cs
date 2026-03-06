@@ -25,13 +25,10 @@ namespace Application
                 _logger.Log($"Producing CV for {opts.FileName}");
 
                 var currentDirectory = Environment.CurrentDirectory;
-                var parentDirectory = Directory.GetParent(currentDirectory)?.ToString()
-                    ?? throw new DirectoryNotFoundException("Parent directory not found");
-
-                var inputPath = Path.Combine(parentDirectory, "in", $"{opts.FileName}.md");
+                var inputPath = Path.Combine(currentDirectory, "in", $"{opts.FileName}.md");
                 var format = opts.FileFormat?.ToLower() ?? "pdf";
                 var extension = format == "doc" ? "docx" : format == "text" ? "txt" : format;
-                var outputPath = Path.Combine(parentDirectory, "out", $"{opts.FileName}.{extension}");
+                var outputPath = Path.Combine(currentDirectory, "out", $"{opts.FileName}.{extension}");
 
                 var cvDocument = _parser.Parse(inputPath);
                 var renderer = _documentFactory.Create(opts.FileFormat);

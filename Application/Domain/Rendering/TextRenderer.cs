@@ -43,9 +43,10 @@ namespace Application.Domain.Rendering
 
                 foreach (var sub in section.SubSections)
                 {
-                    sb.AppendLine(InlinesToString(sub.Title));
+                    var indent = new string(' ', (sub.Level - 2) * 2);
+                    sb.AppendLine($"{indent}{InlinesToString(sub.Title)}");
                     sb.AppendLine();
-                    RenderContent(sb, sub.Content, "");
+                    RenderContent(sb, sub.Content, indent);
                 }
             }
 
@@ -88,7 +89,17 @@ namespace Application.Domain.Rendering
 
         private static string InlinesToString(System.Collections.Generic.List<InlineContent> inlines)
         {
-            return string.Join("", inlines.Select(i => i.IsLink ? $"{i.Text} ({i.Url})" : i.Text));
+            return string.Join("", inlines.Select(i =>
+            {
+                var text = i.Text;
+                if (i.IsBold && i.IsItalic)
+                    text = $"***{text}***";
+                else if (i.IsBold)
+                    text = $"**{text}**";
+                else if (i.IsItalic)
+                    text = $"*{text}*";
+                return i.IsLink ? $"{text} ({i.Url})" : text;
+            }));
         }
     }
 }

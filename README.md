@@ -14,9 +14,8 @@ Place your Markdown CV file in the `in/` directory (e.g. `in/john-doe.md`).
 ### Local
 
 ```sh
-cd Application
-dotnet restore
-dotnet run <filename> [format]
+dotnet restore .\Application\Application.csproj
+dotnet run --project Application <filename> [format]
 ```
 
 ### Docker

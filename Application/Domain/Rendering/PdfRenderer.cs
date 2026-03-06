@@ -14,6 +14,8 @@ namespace Application.Domain.Rendering
         private const float NameFontSize = 25f;
         private const float H1FontSize = 17f;
         private const float H2FontSize = 14f;
+        private const float H3FontSize = 12f;
+        private const float H4FontSize = 11f;
         private const string LinkColor = "#0000FF";
 
         public void Render(CvDocument document, string outputPath)
@@ -99,8 +101,17 @@ namespace Application.Domain.Rendering
             });
         }
 
+        private static float GetSubSectionFontSize(int level) => level switch
+        {
+            3 => H3FontSize,
+            4 => H4FontSize,
+            _ => H2FontSize
+        };
+
         private static void RenderSubSection(ColumnDescriptor column, CvSubSection sub)
         {
+            var fontSize = GetSubSectionFontSize(sub.Level);
+
             column.Item().PaddingTop(4).Column(subCol =>
             {
                 // Subsection heading
@@ -109,9 +120,9 @@ namespace Application.Domain.Rendering
                     foreach (var inline in sub.Title)
                     {
                         if (inline.IsLink)
-                            text.Span(inline.Text).FontSize(H2FontSize).Italic().FontColor(LinkColor);
+                            text.Span(inline.Text).FontSize(fontSize).Italic().FontColor(LinkColor);
                         else
-                            text.Span(inline.Text).FontSize(H2FontSize).Italic();
+                            text.Span(inline.Text).FontSize(fontSize).Italic();
                     }
                 });
 
@@ -170,14 +181,14 @@ namespace Application.Domain.Rendering
         {
             foreach (var inline in inlines)
             {
-                if (inline.IsLink)
-                {
-                    text.Hyperlink(inline.Text, inline.Url!).FontColor(LinkColor);
-                }
-                else
-                {
-                    text.Span(inline.Text);
-                }
+                var span = inline.IsLink
+                    ? text.Hyperlink(inline.Text, inline.Url!).FontColor(LinkColor)
+                    : text.Span(inline.Text);
+
+                if (inline.IsBold)
+                    span.Bold();
+                if (inline.IsItalic)
+                    span.Italic();
             }
         }
     }

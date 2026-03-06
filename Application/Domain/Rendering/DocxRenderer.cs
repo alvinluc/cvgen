@@ -15,6 +15,8 @@ namespace Application.Domain.Rendering
         private const string NameFontSize = "50"; // 25pt
         private const string H1FontSize = "34";   // 17pt
         private const string H2FontSize = "28";   // 14pt
+        private const string H3FontSize = "24";   // 12pt
+        private const string H4FontSize = "22";   // 11pt
         private const string LinkColor = "0000FF";
 
         public void Render(CvDocument document, string outputPath)
@@ -128,8 +130,17 @@ namespace Application.Domain.Rendering
             }
         }
 
+        private static string GetSubSectionFontSize(int level) => level switch
+        {
+            3 => H3FontSize,
+            4 => H4FontSize,
+            _ => H2FontSize
+        };
+
         private void RenderSubSection(Body body, CvSubSection sub)
         {
+            var fontSize = GetSubSectionFontSize(sub.Level);
+
             // Subsection heading - italic
             var para = new Paragraph();
             var pProps = new ParagraphProperties(
@@ -138,7 +149,7 @@ namespace Application.Domain.Rendering
 
             foreach (var inline in sub.Title)
             {
-                var run = CreateRun(inline.Text, H2FontSize, italic: true);
+                var run = CreateRun(inline.Text, fontSize, italic: true);
                 if (inline.IsLink)
                 {
                     // For subsection titles, just render the text (links in headings)
@@ -213,7 +224,7 @@ namespace Application.Domain.Rendering
 
         private Run CreateInlineRun(InlineContent inline)
         {
-            var run = CreateRun(inline.Text, BaseFontSize);
+            var run = CreateRun(inline.Text, BaseFontSize, bold: inline.IsBold, italic: inline.IsItalic);
             if (inline.IsLink)
             {
                 var rProps = run.GetFirstChild<RunProperties>() ?? run.PrependChild(new RunProperties());
