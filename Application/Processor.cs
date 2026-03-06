@@ -1,29 +1,43 @@
+using System;
+using System.IO;
 using Application.Domain;
+using Application.Domain.Parsing;
 
 namespace Application
 {
     internal class Processor
     {
-        private readonly ICommand _command;
         private readonly IDocumentFactory _documentFactory;
+        private readonly IMarkdownParser _parser;
         private readonly ILogger _logger;
 
-        public Processor(ICommand command, IDocumentFactory documentFactory, ILogger logger)
+        public Processor(IDocumentFactory documentFactory, IMarkdownParser parser, ILogger logger)
         {
-            _command = command;
             _documentFactory = documentFactory;
+            _parser = parser;
             _logger = logger;
         }
 
         public void Run(Options opts)
-        {            
+        {
             if (!string.IsNullOrWhiteSpace(opts.FileName))
             {
                 _logger.Log($"Producing CV for {opts.FileName}");
-                var formatter = _documentFactory.Create(opts.FileFormat);
-                var commandToExecute = formatter.Generate(opts.FileName);
-                _command.Execute(commandToExecute);
-                _logger.Log($"Done! File produced");
+
+                var currentDirectory = Environment.CurrentDirectory;
+                var parentDirectory = Directory.GetParent(currentDirectory)?.ToString()
+                    ?? throw new DirectoryNotFoundException("Parent directory not found");
+
+                var inputPath = Path.Combine(parentDirectory, "in", $"{opts.FileName}.md");
+                var format = opts.FileFormat?.ToLower() ?? "pdf";
+                var extension = format == "doc" ? "docx" : format == "text" ? "txt" : format;
+                var outputPath = Path.Combine(parentDirectory, "out", $"{opts.FileName}.{extension}");
+
+                var cvDocument = _parser.Parse(inputPath);
+                var renderer = _documentFactory.Create(opts.FileFormat);
+                renderer.Render(cvDocument, outputPath);
+
+                _logger.Log("Done! File produced");
             }
             else
             {

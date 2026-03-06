@@ -1,7 +1,9 @@
+using Application.Domain.Rendering;
+
 namespace Application.Domain
 {
     public interface IDocumentFactory
     {
-        IFormatter Create(string? fileFormat);
+        IDocumentRenderer Create(string? fileFormat);
     }
 }

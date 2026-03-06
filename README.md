@@ -1,17 +1,35 @@
 # CV Generator
 
-This project requires .NET Core, Pandoc and Latex to be installed which will be automatically installed if using devContainers.
+Generates a CV from a Markdown file into PDF, DOCX, or TXT format.
 
+## Prerequisites
 
-## Generation:
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- Or [Docker](https://docs.docker.com/get-docker/)
+
+## Setup
+
+Place your Markdown CV file in the `in/` directory (e.g. `in/john-doe.md`).
+
+### Local
 
 ```sh
-$ cd Application
-$ dotnet run <filename> <filetype>
+cd Application
+dotnet restore
+dotnet run <filename> [format]
 ```
 
-> `filename` is one of files in doc folder without the markdown extension. e.g john-doe
+### Docker
 
-> `filetype` is one of pdf, docx, txt. This can be omitted and will default to pdf.
+```sh
+docker compose run app dotnet run --project Application <filename> [format]
+```
 
+## Arguments
 
+| Argument   | Description                                    | Required |
+| ---------- | ---------------------------------------------- | -------- |
+| `filename` | Name of the file in `in/` without `.md`        | Yes      |
+| `format`   | Output format: `pdf`, `doc`, or `text`         | No       |
+
+Output defaults to `pdf` if format is omitted. Generated files are written to the `out/` directory.
