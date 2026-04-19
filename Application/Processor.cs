@@ -20,26 +20,30 @@ namespace Application
 
         public void Run(Options opts)
         {
-            if (!string.IsNullOrWhiteSpace(opts.FileName))
-            {
-                _logger.Log($"Producing CV for {opts.FileName}");
 
-                var currentDirectory = Environment.CurrentDirectory;
-                var inputPath = Path.Combine(currentDirectory, "in", $"{opts.FileName}.md");
-                var format = opts.FileFormat?.ToLower() ?? "pdf";
-                var extension = format == "doc" ? "docx" : format == "text" ? "txt" : format;
-                var outputPath = Path.Combine(currentDirectory, "out", $"{opts.FileName}.{extension}");
+            var fileName = opts.File?.ToLower();
 
-                var cvDocument = _parser.Parse(inputPath);
-                var renderer = _documentFactory.Create(opts.FileFormat);
-                renderer.Render(cvDocument, outputPath);
+            if (string.IsNullOrWhiteSpace(fileName))
+                 throw new ArgumentNullException("Please supply a valid file name");
 
-                _logger.Log("Done! File produced");
-            }
-            else
-            {
-                _logger.Log("Please supply a valid file name");
-            }
+
+            var fileExtension = opts.Format?.ToLower() ?? "pdf";
+
+            var currentDirectory = Environment.CurrentDirectory;
+
+            _logger.Log($"Producing CV for {fileName}");
+            var inputPath = Path.Combine(currentDirectory, "in", $"{fileName}.md");
+            var outputPath = Path.Combine(currentDirectory, "out", $"{fileName}.{fileExtension}");
+
+            var cvDocument = _parser.Parse(inputPath);
+            var renderer = _documentFactory.Create(fileExtension);
+            renderer.Render(cvDocument, outputPath);
+
+            _logger.Log("Done! File produced");
+
+
+
+
         }
     }
 }

@@ -11,17 +11,12 @@ Generates a CV from a Markdown file into PDF, DOCX, or TXT format.
 
 Place your Markdown CV file in the `in/` directory (e.g. `in/john-doe.md`).
 
-### Local
+### Running it?
 
 ```sh
-dotnet restore .\Application\Application.csproj
-dotnet run --project Application <filename> [format]
-```
-
-### Docker
-
-```sh
-docker compose run app dotnet run --project Application <filename> [format]
+$env:File = "john-doe"
+$env:Format = "docx"
+make cv @args
 ```
 
 ## Arguments
