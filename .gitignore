@@ -2,6 +2,7 @@ Application/bin/
 Application/obj/
 in/*.md
 !in/john-doe.md
+!in/john-doe-cover-letter.md
 *.pdf
 *.text
 *.txt

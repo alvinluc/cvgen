@@ -25,6 +25,8 @@ namespace Application
                 .AddSingleton<ILogger, ConsoleLogger>()
                 .AddSingleton<IMarkdownParser, MarkdownParser>()
                 .AddSingleton<IDocumentFactory, DocumentFactory>()
+                .AddSingleton<ICoverLetterParser, CoverLetterParser>()
+                .AddSingleton<ICoverLetterFactory, CoverLetterFactory>()
                 .AddSingleton<Processor>()
                 .BuildServiceProvider();
 

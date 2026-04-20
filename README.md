@@ -9,21 +9,45 @@ Generates a CV from a Markdown file into PDF, DOCX, or TXT format.
 
 ## Setup
 
-Place your Markdown CV file in the `in/` directory (e.g. `in/john-doe.md`).
+Place your Markdown source file in the `in/` directory (e.g. `in/john-doe.md` for a CV, `in/john-doe-cover-letter.md` for a covering letter).
 
-### Running it?
+### Generate a CV
 
 ```sh
 $env:File = "john-doe"
 $env:Format = "docx"
-make cv @args
+make cv
 ```
 
-## Arguments
+### Generate a covering letter
 
-| Argument   | Description                                    | Required |
-| ---------- | ---------------------------------------------- | -------- |
-| `filename` | Name of the file in `in/` without `.md`        | Yes      |
-| `format`   | Output format: `pdf`, `doc`, or `text`         | No       |
+```sh
+$env:File = "john-doe-cover-letter"
+$env:Format = "pdf"
+make cover-letter
+```
+
+## Makefile targets
+
+| Target         | Description                                             |
+| -------------- | ------------------------------------------------------- |
+| `cv`           | Render the input file as a CV                           |
+| `cover-letter` | Render the input file as a covering letter              |
+
+Both targets read `File` (filename in `in/` without `.md`) and `Format` (`pdf`, `doc`, or `text`) from the environment.
+
+## Arguments (direct CLI)
+
+| Argument             | Description                                  | Required |
+| -------------------- | -------------------------------------------- | -------- |
+| `filename`           | Name of the file in `in/` without `.md`      | Yes      |
+| `format`             | Output format: `pdf`, `doc`, or `text`       | No       |
+| `-c, --cover-letter` | Render the input file as a covering letter   | No       |
 
 Output defaults to `pdf` if format is omitted. Generated files are written to the `out/` directory.
+
+### Covering letter format
+
+A covering letter uses the same Markdown-with-YAML approach as a CV. The YAML front matter accepts `name`, `left-column`, `right-column`, `date`, `recipient`, `subject`, `salutation`, and `sign-off`; the body is plain paragraphs.
+
+See `in/example-cover-letter.md` for a complete example.
