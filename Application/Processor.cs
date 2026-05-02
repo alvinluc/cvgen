@@ -35,7 +35,7 @@ namespace Application
                 throw new ArgumentNullException("Please supply a valid file name");
 
             var fileExtension = opts.Format?.ToLower() ?? "pdf";
-            var currentDirectory = Environment.CurrentDirectory;
+            var currentDirectory = Environment.CurrentDirectory;            
 
             var inputPath = Path.Combine(currentDirectory, "in", $"{fileName}.md");
             var outputPath = Path.Combine(currentDirectory, "out", $"{fileName}.{fileExtension}");
