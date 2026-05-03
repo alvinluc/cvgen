@@ -3,6 +3,9 @@ __pycache__/
 .venv/
 *.egg-info/
 artifacts/
+input/*.toml
+!input/john-doe.toml
+!input/john-doe-cover-letter.toml
 output/*
 !output/.gitkeep
 *.pdf
