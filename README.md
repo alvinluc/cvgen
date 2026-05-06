@@ -8,26 +8,31 @@ Inputs are TOML files in `input/`. Outputs are PDF or DOCX files in `output/`.
 
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/)
+- [Task](https://taskfile.dev/installation/)
 - [Typst](https://typst.app/) for PDF output
 
 DOCX output uses only Python's standard library.
 
 ## Generate Documents
 
+Install Task first, then run the project tasks from the repository root:
+
 ```sh
-make cv file=john-doe format=pdf
-make cv file=john-doe format=docx
-make cover-letter file=john-doe-cover-letter format=pdf
+task cv file=john-doe format=pdf
+task cv file=john-doe format=docx
+task cover-letter file=john-doe-cover-letter format=pdf
 ```
 
-Direct CLI:
+`format` defaults to `pdf`. Supported formats are `pdf`, `docx`, and `doc` as an alias for `docx`.
+
+The Taskfile commands are thin wrappers around the Python CLI. They run:
 
 ```sh
 uv run cv-generator john-doe pdf
 uv run cv-generator john-doe-cover-letter docx
 ```
 
-`format` defaults to `pdf`. Supported formats are `pdf`, `docx`, and `doc` as an alias for `docx`.
+You can call `uv run cv-generator <input-name> <format>` directly if you do not want to use Task.
 
 ## Input Format
 
