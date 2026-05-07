@@ -73,7 +73,7 @@ class TypstRenderer:
         source = self.cover_letter(document) if document_type == "cover-letter" else self.cv(document)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with tempfile.TemporaryDirectory(prefix="cv-generator-") as temp_dir:
+        with tempfile.TemporaryDirectory(dir=output_path.parent, prefix=f".{output_path.stem}-typst-") as temp_dir:
             typst_path = Path(temp_dir) / f"{output_path.stem}.typ"
             typst_path.write_text(source, encoding="utf-8")
             subprocess.run(["typst", "compile", str(typst_path), str(output_path)], check=True)
@@ -138,7 +138,7 @@ class TypstRenderer:
             '#let chip(label) = box(inset: (x: 0.46em, y: 0.16em), radius: 0.75em, fill: soft, stroke: rule + 0.35pt)[#text(size: 8.2pt, fill: accent, label)]',
             '#let label-text(label, value) = text(size: 8.5pt, fill: muted)[#text(weight: 700, fill: accent, label + ": ") + value]',
             '#set page(paper: "a4", margin: (x: 1.32cm, y: 1.24cm))',
-            '#set text(font: "Libertinus Serif", size: 9.55pt, fill: ink, lang: "en")',
+            '#set text(font: "Noto Serif", size: 9.55pt, fill: ink, lang: "en")',
             '#set par(justify: true, leading: 0.5em)',
             '#show heading.where(level: 1): it => block(above: 0.78em, below: 0.42em)[#grid(columns: (auto, 1fr), gutter: 0.7em, align: horizon)[#text(size: 9.2pt, weight: 700, fill: accent, upper(it.body))][#line(length: 100%, stroke: rule + 0.55pt)]]',
             '#show list: set block(spacing: 0.28em)',
@@ -317,9 +317,9 @@ DOCUMENT_RELS = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 STYLES = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:style w:type="paragraph" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:rFonts w:ascii="Aptos" w:hAnsi="Aptos"/><w:sz w:val="20"/></w:rPr><w:pPr><w:spacing w:after="90"/></w:pPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:rFonts w:ascii="Noto Serif" w:hAnsi="Noto Serif"/><w:sz w:val="20"/></w:rPr><w:pPr><w:spacing w:after="90"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Body"><w:name w:val="Body"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="100"/><w:jc w:val="both"/></w:pPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:rPr><w:rFonts w:ascii="Aptos Display" w:hAnsi="Aptos Display"/><w:b/><w:sz w:val="46"/></w:rPr><w:pPr><w:jc w:val="center"/><w:spacing w:after="20"/></w:pPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:rPr><w:rFonts w:ascii="Noto Serif" w:hAnsi="Noto Serif"/><w:b/><w:sz w:val="46"/></w:rPr><w:pPr><w:jc w:val="center"/><w:spacing w:after="20"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:rPr><w:color w:val="56657A"/><w:sz w:val="19"/></w:rPr><w:pPr><w:jc w:val="center"/><w:spacing w:after="20"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Contact"><w:name w:val="Contact"/><w:rPr><w:color w:val="56657A"/><w:sz w:val="17"/></w:rPr><w:pPr><w:jc w:val="center"/><w:spacing w:after="180"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Heading"><w:name w:val="Heading"/><w:rPr><w:b/><w:color w:val="23395B"/><w:sz w:val="22"/></w:rPr><w:pPr><w:spacing w:before="180" w:after="80"/><w:pBdr><w:bottom w:val="single" w:sz="5" w:space="2" w:color="D7DEE8"/></w:pBdr></w:pPr></w:style>
