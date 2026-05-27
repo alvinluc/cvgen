@@ -11,14 +11,17 @@ import zipfile
 from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
 
-
 SUPPORTED_FORMATS = {"pdf", "docx", "doc"}
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Generate a CV or cover letter from a TOML profile.")
+    parser = argparse.ArgumentParser(
+        description="Generate a CV or cover letter from a TOML profile."
+    )
     parser.add_argument("name", help="Input file name without .toml")
-    parser.add_argument("format", nargs="?", default="pdf", choices=sorted(SUPPORTED_FORMATS))
+    parser.add_argument(
+        "format", nargs="?", default="pdf", choices=sorted(SUPPORTED_FORMATS)
+    )
     parser.add_argument("-i", "--input-dir", default="input")
     parser.add_argument("-o", "--output-dir", default="output")
     args = parser.parse_args(argv)
@@ -68,15 +71,25 @@ def join_items(values: list[str] | None) -> str:
 class TypstRenderer:
     def render(self, document: dict, document_type: str, output_path: Path) -> None:
         if shutil.which("typst") is None:
-            raise RuntimeError("Typst is required for PDF output. Install the `typst` CLI and try again.")
+            raise RuntimeError(
+                "Typst is required for PDF output. Install the `typst` CLI and try again."
+            )
 
-        source = self.cover_letter(document) if document_type == "cover-letter" else self.cv(document)
+        source = (
+            self.cover_letter(document)
+            if document_type == "cover-letter"
+            else self.cv(document)
+        )
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with tempfile.TemporaryDirectory(dir=output_path.parent, prefix=f".{output_path.stem}-typst-") as temp_dir:
+        with tempfile.TemporaryDirectory(
+            dir=output_path.parent, prefix=f".{output_path.stem}-typst-"
+        ) as temp_dir:
             typst_path = Path(temp_dir) / f"{output_path.stem}.typ"
             typst_path.write_text(source, encoding="utf-8")
-            subprocess.run(["typst", "compile", str(typst_path), str(output_path)], check=True)
+            subprocess.run(
+                ["typst", "compile", str(typst_path), str(output_path)], check=True
+            )
 
     def cv(self, document: dict) -> str:
         lines = [self.preamble(document, document_kind="cv")]
@@ -86,14 +99,29 @@ class TypstRenderer:
 
         self.section(lines, "Experience")
         for role in document.get("experience", []):
-            self.entry(lines, role.get("role", ""), role.get("company", ""), role.get("dates", ""), role.get("location", ""))
+            self.entry(
+                lines,
+                role.get("role", ""),
+                role.get("company", ""),
+                role.get("dates", ""),
+                role.get("location", ""),
+            )
             self.paragraph(lines, role.get("summary", ""))
             self.bullets(lines, role.get("highlights", []))
             tech = join_items(role.get("technologies", []))
             if tech:
-                lines.append(f'#block(above: 0.15em, below: 0.35em)[#label-text("Tools", "{t(tech)}")]')
+                lines.append(
+                    f'#block(above: 0.15em, below: 0.35em)[#label-text("Tools", "{t(tech)}")]'
+                )
             for earlier in role.get("progression", []):
-                self.entry(lines, earlier.get("role", ""), role.get("company", ""), earlier.get("dates", ""), earlier.get("location", ""), compact=True)
+                self.entry(
+                    lines,
+                    earlier.get("role", ""),
+                    role.get("company", ""),
+                    earlier.get("dates", ""),
+                    earlier.get("location", ""),
+                    compact=True,
+                )
                 self.paragraph(lines, earlier.get("summary", ""))
                 self.bullets(lines, earlier.get("highlights", []))
 
@@ -103,7 +131,14 @@ class TypstRenderer:
 
         self.section(lines, "Education & Certifications")
         for item in document.get("education", []):
-            self.entry(lines, item.get("name", ""), item.get("institution", ""), item.get("dates", ""), "", compact=True)
+            self.entry(
+                lines,
+                item.get("name", ""),
+                item.get("institution", ""),
+                item.get("dates", ""),
+                "",
+                compact=True,
+            )
             self.paragraph(lines, item.get("detail", ""))
 
         for group in document.get("additional", []):
@@ -118,7 +153,9 @@ class TypstRenderer:
         for recipient in clean_lines(document.get("recipient", [])):
             lines.append(f'#block(below: 0.08em)[#text(size: 9.6pt, "{t(recipient)}")]')
         if document.get("subject"):
-            lines.append(f'#block(above: 0.9em, below: 0.8em)[#text(weight: 700, fill: accent, "{t(document["subject"])}")]')
+            lines.append(
+                f'#block(above: 0.9em, below: 0.8em)[#text(weight: 700, fill: accent, "{t(document["subject"])}")]'
+            )
         self.paragraph(lines, document.get("salutation", ""))
         for paragraph in clean_lines(document.get("body", [])):
             self.paragraph(lines, paragraph)
@@ -135,20 +172,24 @@ class TypstRenderer:
             '#let muted = rgb("#5c6875")',
             '#let soft = rgb("#eef5f7")',
             '#let rule = rgb("#d8e4e8")',
-            '#let chip(label) = box(inset: (x: 0.46em, y: 0.16em), radius: 0.75em, fill: soft, stroke: rule + 0.35pt)[#text(size: 8.2pt, fill: accent, label)]',
+            "#let chip(label) = box(inset: (x: 0.46em, y: 0.16em), radius: 0.75em, fill: soft, stroke: rule + 0.35pt)[#text(size: 8.2pt, fill: accent, label)]",
             '#let label-text(label, value) = text(size: 8.5pt, fill: muted)[#text(weight: 700, fill: accent, label + ": ") + value]',
             '#set page(paper: "a4", margin: (x: 1.32cm, y: 1.24cm))',
             '#set text(font: "Noto Serif", size: 9.55pt, fill: ink, lang: "en")',
-            '#set par(justify: true, leading: 0.5em)',
-            '#show heading.where(level: 1): it => block(above: 0.78em, below: 0.42em)[#grid(columns: (auto, 1fr), gutter: 0.7em, align: horizon)[#text(size: 9.2pt, weight: 700, fill: accent, upper(it.body))][#line(length: 100%, stroke: rule + 0.55pt)]]',
-            '#show list: set block(spacing: 0.28em)',
+            "#set par(justify: true, leading: 0.5em)",
+            "#show heading.where(level: 1): it => block(above: 0.78em, below: 0.42em)[#grid(columns: (auto, 1fr), gutter: 0.7em, align: horizon)[#text(size: 9.2pt, weight: 700, fill: accent, upper(it.body))][#line(length: 100%, stroke: rule + 0.55pt)]]",
+            "#show list: set block(spacing: 0.28em)",
             f'#align(center)[#text(size: {title_size}, weight: 700, fill: ink, "{t(document.get("name", ""))}")]',
         ]
         if document.get("headline"):
-            pieces.append(f'#align(center)[#text(size: 9.4pt, fill: accent, "{t(document["headline"])}")]')
+            pieces.append(
+                f'#align(center)[#text(size: 9.4pt, fill: accent, "{t(document["headline"])}")]'
+            )
         if contact_line(document):
-            pieces.append(f'#align(center)[#text(size: 8pt, fill: muted, "{t(contact_line(document))}")]')
-        pieces.append('#align(center)[#line(length: 38%, stroke: accent + 0.7pt)]')
+            pieces.append(
+                f'#align(center)[#text(size: 8pt, fill: muted, "{t(contact_line(document))}")]'
+            )
+        pieces.append("#align(center)[#line(length: 38%, stroke: accent + 0.7pt)]")
         pieces.append(f"#v({header_gap})")
         return "\n".join(pieces)
 
@@ -163,17 +204,28 @@ class TypstRenderer:
             lines.append(f'#block(below: 0.48em)[#text("{t(value.strip())}")]')
 
     @staticmethod
-    def entry(lines: list[str], role: str, company: str, dates: str, location: str, compact: bool = False) -> None:
+    def entry(
+        lines: list[str],
+        role: str,
+        company: str,
+        dates: str,
+        location: str,
+        compact: bool = False,
+    ) -> None:
         when = " · ".join(clean_lines([dates, location]))
         left = f"{role} — {company}" if company else role
         gap = "0.18em" if compact else "0.34em"
         lines.append(f"#v({gap})")
-        lines.append(f'#grid(columns: (1fr, auto), gutter: 1em)[#text(weight: 700, fill: ink, "{t(left)}")][#text(size: 8.2pt, fill: muted, "{t(when)}")]')
+        lines.append(
+            f'#grid(columns: (1fr, auto), gutter: 1em)[#text(weight: 700, fill: ink, "{t(left)}")][#text(size: 8.2pt, fill: muted, "{t(when)}")]'
+        )
 
     @staticmethod
     def key_value(lines: list[str], key: str, value: str) -> None:
         if key and value:
-            lines.append(f'#block(below: 0.25em)[#text(weight: 700, "{t(key)}: ")#text("{t(value)}")]')
+            lines.append(
+                f'#block(below: 0.25em)[#text(weight: 700, "{t(key)}: ")#text("{t(value)}")]'
+            )
 
     @staticmethod
     def skill_group(lines: list[str], key: str, values: list[str]) -> None:
@@ -181,7 +233,9 @@ class TypstRenderer:
         if not key or not items:
             return
         chips = " ".join(f'#chip("{t(item)}")' for item in items)
-        lines.append(f'#block(below: 0.5em)[#text(weight: 700, fill: accent, "{t(key)}") #h(0.5em) {chips}]')
+        lines.append(
+            f'#block(below: 0.5em)[#text(weight: 700, fill: accent, "{t(key)}") #h(0.5em) {chips}]'
+        )
 
     @staticmethod
     def bullets(lines: list[str], values: list[str]) -> None:
@@ -196,7 +250,11 @@ class TypstRenderer:
 
 class DocxRenderer:
     def render(self, document: dict, document_type: str, output_path: Path) -> None:
-        body = self.cover_letter(document) if document_type == "cover-letter" else self.cv(document)
+        body = (
+            self.cover_letter(document)
+            if document_type == "cover-letter"
+            else self.cv(document)
+        )
         output_path.parent.mkdir(parents=True, exist_ok=True)
         write_docx(output_path, body)
 
@@ -211,26 +269,64 @@ class DocxRenderer:
             heading("Experience"),
         ]
         for role in document.get("experience", []):
-            body.append(paragraph(f'{role.get("role", "")} — {role.get("company", "")}', "EntryTitle"))
-            body.append(paragraph(" · ".join(clean_lines([role.get("dates", ""), role.get("location", "")])), "Meta"))
+            body.append(
+                paragraph(
+                    f"{role.get('role', '')} — {role.get('company', '')}", "EntryTitle"
+                )
+            )
+            body.append(
+                paragraph(
+                    " · ".join(
+                        clean_lines([role.get("dates", ""), role.get("location", "")])
+                    ),
+                    "Meta",
+                )
+            )
             body.append(paragraph(role.get("summary", "")))
-            body.extend(bullet(item) for item in clean_lines(role.get("highlights", [])))
+            body.extend(
+                bullet(item) for item in clean_lines(role.get("highlights", []))
+            )
             tech = join_items(role.get("technologies", []))
             if tech:
                 body.append(paragraph(f"Technologies: {tech}", "Meta"))
             for earlier in role.get("progression", []):
-                body.append(paragraph(f'{earlier.get("role", "")} — {role.get("company", "")}', "EntryTitle"))
-                body.append(paragraph(" · ".join(clean_lines([earlier.get("dates", ""), earlier.get("location", "")])), "Meta"))
+                body.append(
+                    paragraph(
+                        f"{earlier.get('role', '')} — {role.get('company', '')}",
+                        "EntryTitle",
+                    )
+                )
+                body.append(
+                    paragraph(
+                        " · ".join(
+                            clean_lines(
+                                [earlier.get("dates", ""), earlier.get("location", "")]
+                            )
+                        ),
+                        "Meta",
+                    )
+                )
                 body.append(paragraph(earlier.get("summary", "")))
-                body.extend(bullet(item) for item in clean_lines(earlier.get("highlights", [])))
+                body.extend(
+                    bullet(item) for item in clean_lines(earlier.get("highlights", []))
+                )
 
         body.append(heading("Skills"))
         for group in document.get("skills", []):
-            body.append(paragraph(f'{group.get("name", "")}: {join_items(group.get("items", []))}'))
+            body.append(
+                paragraph(
+                    f"{group.get('name', '')}: {join_items(group.get('items', []))}"
+                )
+            )
 
         body.append(heading("Education & Certifications"))
         for item in document.get("education", []):
-            body.append(paragraph(f'{item.get("name", "")} — {item.get("institution", "")}', "EntryTitle"))
+            body.append(
+                paragraph(
+                    f"{item.get('name', '')} — {item.get('institution', '')}",
+                    "EntryTitle",
+                )
+            )
             body.append(paragraph(item.get("dates", ""), "Meta"))
             body.append(paragraph(item.get("detail", "")))
 
@@ -248,7 +344,10 @@ class DocxRenderer:
             paragraph("", "Spacer"),
             paragraph(document.get("date", "")),
         ]
-        body.extend(paragraph(line, "NoGap") for line in clean_lines(document.get("recipient", [])))
+        body.extend(
+            paragraph(line, "NoGap")
+            for line in clean_lines(document.get("recipient", []))
+        )
         body.append(paragraph(document.get("subject", ""), "EntryTitle"))
         body.append(paragraph(document.get("salutation", "")))
         body.extend(paragraph(item) for item in clean_lines(document.get("body", [])))
@@ -281,7 +380,7 @@ def bullet(text: str) -> str:
 
 
 def write_docx(path: Path, body: str) -> None:
-    document_xml = f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    document_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
   <w:body>
     {body}
@@ -290,7 +389,7 @@ def write_docx(path: Path, body: str) -> None:
       <w:pgMar w:top="850" w:right="900" w:bottom="850" w:left="900" w:header="720" w:footer="720" w:gutter="0"/>
     </w:sectPr>
   </w:body>
-</w:document>'''
+</w:document>"""
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as docx:
         docx.writestr("[Content_Types].xml", CONTENT_TYPES)
         docx.writestr("_rels/.rels", ROOT_RELS)
@@ -299,23 +398,23 @@ def write_docx(path: Path, body: str) -> None:
         docx.writestr("word/styles.xml", STYLES)
 
 
-CONTENT_TYPES = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+CONTENT_TYPES = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
   <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
   <Default Extension="xml" ContentType="application/xml"/>
   <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
   <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
-</Types>'''
+</Types>"""
 
-ROOT_RELS = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ROOT_RELS = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
-</Relationships>'''
+</Relationships>"""
 
-DOCUMENT_RELS = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>'''
+DOCUMENT_RELS = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>"""
 
-STYLES = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+STYLES = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
   <w:style w:type="paragraph" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:rFonts w:ascii="Noto Serif" w:hAnsi="Noto Serif"/><w:sz w:val="20"/></w:rPr><w:pPr><w:spacing w:after="90"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Body"><w:name w:val="Body"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="100"/><w:jc w:val="both"/></w:pPr></w:style>
@@ -328,7 +427,7 @@ STYLES = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <w:style w:type="paragraph" w:styleId="Bullet"><w:name w:val="Bullet"/><w:basedOn w:val="Body"/><w:pPr><w:spacing w:after="55"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="NoGap"><w:name w:val="NoGap"/><w:basedOn w:val="Body"/><w:pPr><w:spacing w:after="0"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Spacer"><w:name w:val="Spacer"/><w:pPr><w:spacing w:after="80"/></w:pPr></w:style>
-</w:styles>'''
+</w:styles>"""
 
 
 if __name__ == "__main__":
