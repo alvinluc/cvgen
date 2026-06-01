@@ -98,7 +98,10 @@ class TypstRenderer:
         self.paragraph(lines, document.get("summary", ""))
 
         self.section(lines, "Experience")
+        has_previous_experience_block = False
         for role in document.get("experience", []):
+            if has_previous_experience_block:
+                self.experience_break(lines)
             self.entry(
                 lines,
                 role.get("role", ""),
@@ -113,7 +116,9 @@ class TypstRenderer:
                 lines.append(
                     f'#block(above: 0.15em, below: 0.35em)[#label-text("Tools", "{t(tech)}")]'
                 )
+            has_previous_experience_block = True
             for earlier in role.get("progression", []):
+                self.experience_break(lines)
                 self.entry(
                     lines,
                     earlier.get("role", ""),
@@ -124,6 +129,7 @@ class TypstRenderer:
                 )
                 self.paragraph(lines, earlier.get("summary", ""))
                 self.bullets(lines, earlier.get("highlights", []))
+                has_previous_experience_block = True
 
         self.section(lines, "Skills")
         for group in document.get("skills", []):
@@ -175,7 +181,7 @@ class TypstRenderer:
             "#let chip(label) = box(inset: (x: 0.46em, y: 0.16em), radius: 0.75em, fill: soft, stroke: rule + 0.35pt)[#text(size: 8.2pt, fill: accent, label)]",
             '#let label-text(label, value) = text(size: 8.5pt, fill: muted)[#text(weight: 700, fill: accent, label + ": ") + value]',
             '#set page(paper: "a4", margin: (x: 1.32cm, y: 1.24cm))',
-            '#set text(font: "Noto Serif", size: 9.55pt, fill: ink, lang: "en")',
+            '#set text(font: "Libertinus Serif", size: 9.55pt, fill: ink, lang: "en")',
             "#set par(justify: true, leading: 0.5em)",
             "#show heading.where(level: 1): it => block(above: 0.78em, below: 0.42em)[#grid(columns: (auto, 1fr), gutter: 0.7em, align: horizon)[#text(size: 9.2pt, weight: 700, fill: accent, upper(it.body))][#line(length: 100%, stroke: rule + 0.55pt)]]",
             "#show list: set block(spacing: 0.28em)",
@@ -202,6 +208,10 @@ class TypstRenderer:
     def paragraph(lines: list[str], value: str) -> None:
         if value and value.strip():
             lines.append(f'#block(below: 0.48em)[#text("{t(value.strip())}")]')
+
+    @staticmethod
+    def experience_break(lines: list[str]) -> None:
+        lines.append("#v(0.62em)")
 
     @staticmethod
     def entry(
@@ -268,7 +278,10 @@ class DocxRenderer:
             paragraph(document.get("summary", "")),
             heading("Experience"),
         ]
+        has_previous_experience_block = False
         for role in document.get("experience", []):
+            if has_previous_experience_block:
+                body.append(paragraph("", "ExperienceBreak"))
             body.append(
                 paragraph(
                     f"{role.get('role', '')} — {role.get('company', '')}", "EntryTitle"
@@ -289,7 +302,9 @@ class DocxRenderer:
             tech = join_items(role.get("technologies", []))
             if tech:
                 body.append(paragraph(f"Technologies: {tech}", "Meta"))
+            has_previous_experience_block = True
             for earlier in role.get("progression", []):
+                body.append(paragraph("", "ExperienceBreak"))
                 body.append(
                     paragraph(
                         f"{earlier.get('role', '')} — {role.get('company', '')}",
@@ -310,6 +325,7 @@ class DocxRenderer:
                 body.extend(
                     bullet(item) for item in clean_lines(earlier.get("highlights", []))
                 )
+                has_previous_experience_block = True
 
         body.append(heading("Skills"))
         for group in document.get("skills", []):
@@ -366,7 +382,7 @@ def t(value: str) -> str:
 
 
 def paragraph(text: str, style: str = "Body") -> str:
-    if style != "Spacer" and not text:
+    if style not in {"Spacer", "ExperienceBreak"} and not text:
         return ""
     return f'<w:p><w:pPr><w:pStyle w:val="{style}"/></w:pPr><w:r><w:t xml:space="preserve">{xml_escape(text)}</w:t></w:r></w:p>'
 
@@ -416,9 +432,9 @@ DOCUMENT_RELS = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 STYLES = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:style w:type="paragraph" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:rFonts w:ascii="Noto Serif" w:hAnsi="Noto Serif"/><w:sz w:val="20"/></w:rPr><w:pPr><w:spacing w:after="90"/></w:pPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:rFonts w:ascii="Libertinus Serif" w:hAnsi="Libertinus Serif"/><w:sz w:val="20"/></w:rPr><w:pPr><w:spacing w:after="90"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Body"><w:name w:val="Body"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="100"/><w:jc w:val="both"/></w:pPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:rPr><w:rFonts w:ascii="Noto Serif" w:hAnsi="Noto Serif"/><w:b/><w:sz w:val="46"/></w:rPr><w:pPr><w:jc w:val="center"/><w:spacing w:after="20"/></w:pPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:rPr><w:rFonts w:ascii="Libertinus Serif" w:hAnsi="Libertinus Serif"/><w:b/><w:sz w:val="46"/></w:rPr><w:pPr><w:jc w:val="center"/><w:spacing w:after="20"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:rPr><w:color w:val="56657A"/><w:sz w:val="19"/></w:rPr><w:pPr><w:jc w:val="center"/><w:spacing w:after="20"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Contact"><w:name w:val="Contact"/><w:rPr><w:color w:val="56657A"/><w:sz w:val="17"/></w:rPr><w:pPr><w:jc w:val="center"/><w:spacing w:after="180"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Heading"><w:name w:val="Heading"/><w:rPr><w:b/><w:color w:val="23395B"/><w:sz w:val="22"/></w:rPr><w:pPr><w:spacing w:before="180" w:after="80"/><w:pBdr><w:bottom w:val="single" w:sz="5" w:space="2" w:color="D7DEE8"/></w:pBdr></w:pPr></w:style>
@@ -427,6 +443,7 @@ STYLES = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <w:style w:type="paragraph" w:styleId="Bullet"><w:name w:val="Bullet"/><w:basedOn w:val="Body"/><w:pPr><w:spacing w:after="55"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="NoGap"><w:name w:val="NoGap"/><w:basedOn w:val="Body"/><w:pPr><w:spacing w:after="0"/></w:pPr></w:style>
   <w:style w:type="paragraph" w:styleId="Spacer"><w:name w:val="Spacer"/><w:pPr><w:spacing w:after="80"/></w:pPr></w:style>
+  <w:style w:type="paragraph" w:styleId="ExperienceBreak"><w:name w:val="ExperienceBreak"/><w:pPr><w:spacing w:after="150"/></w:pPr></w:style>
 </w:styles>"""
 
 

@@ -58,6 +58,6 @@ See [input/john-doe.toml](input/john-doe.toml) and [input/john-doe-cover-letter.
 
 ## Design Notes
 
-The PDF template is intentionally typographic rather than icon-led: Noto Serif, compact spacing, restrained colour, ruled section headings, and skill chips.
+The PDF template is intentionally typographic rather than icon-led: Libertinus Serif, compact spacing, restrained colour, ruled section headings, and skill chips.
 
 Icons such as Phosphor can look fresh in portfolios, but they add little to a CV and can make the layout feel busier or less ATS-friendly. The current template keeps visual polish in the typography and structure instead.
