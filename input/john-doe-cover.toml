@@ -1,0 +1,38 @@
+type = "cover-letter"
+name = "John Doe"
+headline = "Engineering Manager | Platform Delivery | Distributed Systems"
+date = "10 May 2026"
+recipient = [
+  "Hiring Manager",
+  "Example Company",
+  "1 Example Street",
+  "London, EC1A 1AA"
+]
+subject = "Application for Engineering Manager"
+salutation = "Dear Hiring Manager,"
+body = [
+  "Your engineering team is scaling its platform — I've just done that. Over 12+ years I've grown a platform team from 4 to 9 engineers, delivered a self-service deployment platform now used by six product teams, and cut nightly batch runtime by roughly 70%.",
+  "I currently lead a fully remote platform engineering team building internal developer tooling and shared services — owning delivery, hiring, performance, and technical direction. I've supported 3 internal promotions and moved releases from a monthly to a fortnightly cadence.",
+  "Earlier in the same organisation I reduced a critical nightly pipeline from about 9 hours to 2.5 while migrating legacy queue consumers to managed streaming — the kind of hands-on depth I still bring to leadership decisions today.",
+  "Alongside delivery I invest in keeping my technical judgement current, most recently through a certificate in distributed systems design, and by leading the incremental replacement of a legacy scheduling service without disrupting downstream teams.",
+  "I'd be most useful in roles that combine technical judgement with deliberate people leadership — particularly where the team is scaling, modernising legacy systems, or raising its operational bar.",
+  "I'd welcome a short call to walk through how I'd approach Example Company's platform roadmap and team scaling priorities — and to hear what you'd want the next Engineering Manager to tackle first."
+]
+sign_off = "Yours sincerely,"
+
+[[contact]]
+label = "Mobile"
+value = "+44 7700 900123"
+
+[[contact]]
+label = "Email"
+value = "john.doe@example.com"
+
+[[contact]]
+label = "Location"
+value = "Bristol, England, United Kingdom"
+
+[[contact]]
+label = "LinkedIn"
+value = "linkedin.com/in/john-doe-example"
+url = "https://www.linkedin.com/in/john-doe-example"

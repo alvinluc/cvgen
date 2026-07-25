@@ -1,0 +1,121 @@
+type = "cv"
+name = "John Doe"
+headline = "Senior Software Engineer / Team Lead | Distributed Systems | Developer Platforms"
+summary = "Senior software engineer and technical lead with 12+ years designing, building, and modernising platforms, APIs, and data processing systems. Designed and delivered a self-service deployment platform now used by six product teams, and previously cut nightly batch runtime by roughly 70%. Strong background in Go, Java, SQL, Python, API design, and distributed delivery."
+
+[[contact]]
+label = "Mobile"
+value = "+44 7700 900123"
+
+[[contact]]
+label = "Email"
+value = "john.doe@example.com"
+
+[[contact]]
+label = "Location"
+value = "Bristol, England, United Kingdom"
+
+[[contact]]
+label = "LinkedIn"
+value = "linkedin.com/in/john-doe-example"
+url = "https://www.linkedin.com/in/john-doe-example"
+
+[[experience]]
+role = "Engineering Manager"
+company = "Acme Logistics Software"
+dates = "June 2018 - Present"
+location = "Remote, England"
+summary = "Leads a platform engineering team responsible for internal developer tooling, deployment pipelines, and shared service libraries, while staying hands-on with architecture and code review."
+highlights = [
+  "Designed and delivered a self-service deployment platform in Go, standardising build, release, and rollback behind a single API now used by 6 product teams on a fortnightly release train.",
+  "Introduced service-level objectives and structured tracing across shared services, cutting mean time to diagnose production issues from hours to minutes.",
+  "Leads the current initiative to replace a legacy Java scheduling service with a horizontally scalable Go implementation, running the migration incrementally behind feature flags.",
+  "Debugged and stabilised legacy batch tooling while the replacement platform was built out, keeping nightly jobs reliable throughout the transition.",
+  "Grew the team from 4 to 9 engineers, owning hiring, onboarding, and technical development across platform and tooling.",
+  "Established async workflows, architecture decision records, and documentation-first practice for a fully distributed team.",
+  "Defined data retention and access controls for platform telemetry in line with GDPR requirements."
+]
+
+[[experience.progression]]
+role = "Team Lead"
+dates = "September 2019 - March 2021"
+summary = "Led design and delivery of a new internal tooling product, building pipelines for 40 upstream data feeds and exposing them through versioned REST APIs consumed across the business. Grew the team from 2 engineers to 5 across development and QA while acting as Scrum Master and moving releases from a monthly cycle to a fortnightly cadence."
+
+[[experience.progression]]
+role = "Senior Software Engineer"
+dates = "June 2018 - September 2019"
+summary = "Reduced nightly batch processing time by roughly 70% (about 9 hours down to 2.5) across 40 upstream data feeds. Migrated a legacy message-queue consumer to a managed streaming service, refactored an ageing monolith toward service boundaries, and led remediation of external security review findings."
+
+[[experience]]
+role = "Software Engineer"
+company = "Globex Digital"
+dates = "August 2012 - June 2018"
+summary = "Built and evolved a customer analytics product spanning event ingestion, backend API design, SQL-backed reporting endpoints, and React/TypeScript dashboards. Gained deep hands-on experience with high-throughput systems and full-lifecycle delivery."
+highlights = [
+    "Built event ingestion pipelines handling several million events per day, normalising and persisting data to SQL for downstream API and reporting use.",
+    "Designed backend API components serving reporting, segmentation, and workflow data to client-facing interfaces.",
+    "Built interactive charting and visualisation UIs in React and TypeScript.",
+    "Worked across the full application lifecycle — prototype, implementation, production hardening, and support — with broad engineering ownership."
+]
+
+[[skills]]
+name = "Languages & Frameworks"
+items = [
+  "Go",
+  "Java",
+  "Python",
+  "SQL",
+  "TypeScript",
+  "React"
+]
+
+[[skills]]
+name = "Platform & Data"
+items = [
+  "Developer platform design",
+  "API design",
+  "Event-driven architecture",
+  "Stream processing",
+  "AWS",
+  "Kubernetes",
+  "Docker",
+  "CI/CD"
+]
+
+[[skills]]
+name = "Practices & Delivery"
+items = [
+  "Technical direction",
+  "Mentoring engineers",
+  "Sprint planning",
+  "Agile delivery",
+  "Documentation-first delivery",
+  "Remote collaboration",
+  "Stakeholder engagement",
+  "Observability",
+  "GDPR awareness"
+]
+
+[[education]]
+name = "Certificate: Distributed Systems Design"
+institution = "Example Institute of Technology"
+dates = "2023"
+
+[[education]]
+name = "MSc in Computer Science"
+institution = "University of Exampleshire"
+dates = "2012"
+
+[[education]]
+name = "BSc in Software Engineering"
+institution = "Example Metropolitan University"
+dates = "2011"
+
+[[additional]]
+name = "Additional"
+items = [
+    "Right to work: British citizen",
+    "Languages: English (fluent), Spanish (conversational)",
+    "Professional interests: developer experience, API design, distributed systems",
+    "Comfortable working across architecture, implementation, mentoring, and delivery"
+]

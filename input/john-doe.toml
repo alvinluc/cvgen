@@ -1,0 +1,120 @@
+type = "cv"
+name = "John Doe"
+headline = "Engineering Leader | Platform Delivery, Distributed Systems & Team Growth"
+summary = "Engineering leader with 12+ years spanning hands-on development, technical leadership, and engineering management. Currently leads a platform team building internal developer tooling for a logistics software company. Grew the team from 4 to 9 engineers while holding a fortnightly release cadence. Comfortable across hiring, onboarding, performance management, capacity planning, and distributed team delivery."
+
+[[contact]]
+label = "Mobile"
+value = "+44 7700 900123"
+
+[[contact]]
+label = "Email"
+value = "john.doe@example.com"
+
+[[contact]]
+label = "Location"
+value = "Bristol, England, United Kingdom"
+
+[[contact]]
+label = "LinkedIn"
+value = "linkedin.com/in/john-doe-example"
+url = "https://www.linkedin.com/in/john-doe-example"
+
+[[experience]]
+role = "Engineering Manager"
+company = "Acme Logistics Software"
+dates = "June 2018 - Present"
+location = "Remote, England"
+summary = "Leads a platform engineering team responsible for internal developer tooling, deployment pipelines, and shared service libraries. Accountable for delivery, capacity planning, hiring, performance management, and stakeholder communication."
+highlights = [
+    "Owns the platform roadmap end to end — from quarterly planning through stakeholder alignment and delivery reporting to the engineering leadership group.",
+    "Grew the team from 4 to 9 engineers across platform and tooling, running hiring for 4 of those roles including sourcing, interviewing, and onboarding.",
+    "Developed engineers through structured 1:1s, review cycles, and a published career ladder; supported 3 internal promotions.",
+    "Interviews across the wider organisation roughly twice a month, contributing to calibration and a consistent hiring bar.",
+    "Held retention and delivery steady through two reorganisations by leaning on async workflows, written decision records, and documented on-call practices.",
+    "Acts as escalation point for a legacy Java scheduling service while the team delivers its replacement in Go.",
+    "Runs the deployment platform used by 6 product teams, with a fortnightly release train and published service-level objectives."
+]
+
+[[experience.progression]]
+role = "Team Lead"
+dates = "September 2019 - March 2021"
+summary = "Took technical leadership of a new internal tooling product, growing the team from 2 engineers to 5 across development and QA. Delivered a self-service deployment API that removed manual release steps for product teams. Acted as Scrum Master and moved releases from a monthly cycle to a fortnightly cadence, improving predictability of sprint commitments."
+
+[[experience.progression]]
+role = "Senior Software Engineer"
+dates = "June 2018 - September 2019"
+summary = "Reduced nightly batch processing time by roughly 70% (about 9 hours down to 2.5) across 40 upstream data feeds. Migrated a legacy message-queue consumer to a managed streaming service and led remediation of findings from an external security review."
+
+[[experience]]
+role = "Software Engineer"
+company = "Globex Digital"
+dates = "August 2012 - June 2018"
+summary = "Built and maintained a customer analytics product covering ingestion pipelines, backend APIs, and dashboard front ends. Established broad end-to-end delivery experience before moving into formal leadership."
+highlights = [
+    "Built event ingestion pipelines handling several million events per day, normalising and persisting them to a relational store.",
+    "Designed backend API components exposing reporting and workflow data to client-facing applications.",
+    "Built interactive dashboard and charting features in React and TypeScript.",
+    "Worked across prototyping, implementation, and production support in a small-team environment with wide ownership."
+]
+
+[[skills]]
+name = "Leadership & Talent"
+items = [
+  "Engineering team management",
+  "Hiring and onboarding",
+  "Performance management",
+  "Coaching and mentoring",
+  "Capacity planning",
+  "Remote team leadership",
+  "Stakeholder engagement"
+]
+
+[[skills]]
+name = "Delivery & Operations"
+items = [
+  "Delivery ownership",
+  "Agile delivery",
+  "Scrum facilitation",
+  "Incident and on-call practice",
+  "Async / documentation-first practices",
+  "Technical direction"
+]
+
+[[skills]]
+name = "Domain, Platform & Tech"
+items = [
+  "Developer platform strategy",
+  "API design",
+  "Observability",
+  "Logistics and supply chain systems",
+  "GDPR awareness",
+  "Go",
+  "Java",
+  "SQL",
+  "AWS"
+]
+
+[[education]]
+name = "Certificate: Distributed Systems Design"
+institution = "Example Institute of Technology"
+dates = "2023"
+
+[[education]]
+name = "MSc in Computer Science"
+institution = "University of Exampleshire"
+dates = "2012"
+
+[[education]]
+name = "BSc in Software Engineering"
+institution = "Example Metropolitan University"
+dates = "2011"
+
+[[additional]]
+name = "Additional"
+items = [
+    "Right to work: British citizen",
+    "Languages: English (fluent), Spanish (conversational)",
+    "Remote-first leadership experience across distributed teams",
+    "Professional interests: developer experience, platform design, team effectiveness"
+]
