@@ -5,7 +5,7 @@ edition = "2024"
 rust-version = "1.97.1"
 description = "Generate CV and cover letter PDFs/DOCX files from TOML inputs."
 readme = "README.md"
-license = "Apache-2.0"
+license = "MIT"
 
 [[bin]]
 name = "cv-generator"

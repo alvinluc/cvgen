@@ -8,5 +8,6 @@ output/*
 !output/.gitkeep
 *.pdf
 *.doc[x]
-*.vs/
+.vs/
+.vscode/
 .claude/
