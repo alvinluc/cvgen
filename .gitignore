@@ -1,7 +1,4 @@
-__pycache__/
-.pytest_cache/
-.venv/
-*.egg-info/
+target/
 artifacts/
 input/*.toml
 !input/john-doe.toml

@@ -1,38 +1,57 @@
 # CV Generator
 
-A lightweight Python generator for CVs and cover letters.
+A lightweight Rust generator for CVs and cover letters.
 
 Inputs are TOML files in `input/`. Outputs are PDF or DOCX files in `output/`.
 
 ## Prerequisites
 
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/)
-- GNU Make
-- [Typst](https://typst.app/) for PDF output
+- Rust 1.97.1+ (2024 edition)
+- [just](https://github.com/casey/just) for the task recipes (optional — every
+  recipe is a one-line `cargo` command)
 
-DOCX output uses only Python's standard library.
+Nothing else. The binary is self-contained: [Typst](https://typst.app/) is linked
+in as a library for PDF output and DOCX is written directly, so no external CLI
+and no installed fonts are required. The Typst fonts — including Libertinus
+Serif, which the template uses — are embedded in the binary, so output is
+identical on any machine. The trade-off is build time and a release binary of
+roughly 50 MB.
 
 ## Generate Documents
 
-Run the make targets from the repository root:
+Run `just` from the repository root, naming the input file:
 
 ```sh
-make cv file=john-doe format=pdf
-make cv file=john-doe format=docx
-make cover-letter file=john-doe-cover-letter format=pdf
+just gen john-doe
+just gen john-doe docx
+just gen john-doe-cover-letter
 ```
+
+There is no separate recipe for cover letters — the document type comes from the
+`type` field in the input file. Run `just` on its own to list the recipes.
 
 `format` defaults to `pdf`. Supported formats are `pdf`, `docx`, and `doc` as an alias for `docx`.
 
-The make targets are thin wrappers around the Python CLI. They run:
+The recipe is a thin wrapper around the Rust CLI. It runs:
 
 ```sh
-uv run cv-generator john-doe pdf
-uv run cv-generator john-doe-cover-letter docx
+cargo run --release -- john-doe pdf
+cargo run --release -- john-doe-cover-letter docx
 ```
 
-You can call `uv run cv-generator <input-name> <format>` directly if you do not want to use Make.
+You can also build once with `just build` and call the binary directly:
+
+```sh
+./target/release/cv-generator <input-name> <format> [-i input] [-o output]
+```
+
+## Development
+
+```sh
+just check   # cargo fmt --check, clippy, and tests
+just fmt     # cargo fmt
+just clean   # cargo clean
+```
 
 ## Input Format
 
@@ -51,8 +70,10 @@ CV files use:
 Cover letters use:
 
 - `type = "cover-letter"`
-- top-level `name`, `headline`, `date`, `recipient`, `subject`, `salutation`, `body`, and `sign_off`
-- repeated `[[contact]]`
+- top-level `date`, `recipient`, `subject`, `salutation`, `body`, `sign_off`, and `name`
+
+Letters render no header block, so `headline` and `[[contact]]` are ignored; `name`
+appears only under the sign-off.
 
 See [input/john-doe.toml](input/john-doe.toml) and [input/john-doe-cover-letter.toml](input/john-doe-cover-letter.toml).
 
@@ -61,3 +82,5 @@ See [input/john-doe.toml](input/john-doe.toml) and [input/john-doe-cover-letter.
 The PDF template is intentionally typographic rather than icon-led: Libertinus Serif, compact spacing, restrained colour, ruled section headings, and skill chips.
 
 Icons such as Phosphor can look fresh in portfolios, but they add little to a CV and can make the layout feel busier or less ATS-friendly. The current template keeps visual polish in the typography and structure instead.
+
+PDF generation builds Typst markup in memory (`src/template.rs`) and compiles it through the linked-in Typst compiler (`src/pdf.rs`); no temporary files are written. PDF creation timestamps are recorded in UTC rather than local time, because reading the system timezone is unsound once the compiler's worker threads are running.
