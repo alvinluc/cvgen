@@ -57,6 +57,13 @@ pub fn cv(document: &Document) -> String {
             );
             paragraph(&mut lines, &earlier.summary);
             bullets(&mut lines, &earlier.highlights);
+            let tech = join_items(&earlier.technologies);
+            if !tech.is_empty() {
+                lines.push(format!(
+                    "#block(above: 0.15em, below: 0.35em)[#label-text(\"Tools\", \"{}\")]",
+                    t(&tech)
+                ));
+            }
         }
     }
 

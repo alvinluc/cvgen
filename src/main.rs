@@ -33,14 +33,18 @@ enum Format {
     Doc,
     Docx,
     Pdf,
+    /// Single-column, icon-free DOCX tuned for ATS parsers
+    Ats,
 }
 
 impl Format {
-    /// `doc` is an alias for `docx`.
-    fn extension(self) -> &'static str {
+    /// `doc` is an alias for `docx`; the ATS variant gets its own suffix so
+    /// it can live next to the styled DOCX.
+    fn file_name(self, name: &str) -> String {
         match self {
-            Format::Pdf => "pdf",
-            Format::Doc | Format::Docx => "docx",
+            Format::Pdf => format!("{name}.pdf"),
+            Format::Doc | Format::Docx => format!("{name}.docx"),
+            Format::Ats => format!("{name}-ats.docx"),
         }
     }
 }
@@ -57,16 +61,14 @@ fn main() -> ExitCode {
 
 fn run(cli: Cli) -> Result<(), String> {
     let input_path = cli.input_dir.join(format!("{}.toml", cli.name));
-    let output_path = cli
-        .output_dir
-        .join(format!("{}.{}", cli.name, cli.format.extension()));
+    let output_path = cli.output_dir.join(cli.format.file_name(&cli.name));
 
     let document = load_toml(&input_path)?;
 
-    if cli.format == Format::Pdf {
-        pdf::render(&document, &output_path)?;
-    } else {
-        docx::render(&document, &output_path)?;
+    match cli.format {
+        Format::Pdf => pdf::render(&document, &output_path)?,
+        Format::Ats => docx::render_ats(&document, &output_path)?,
+        Format::Doc | Format::Docx => docx::render(&document, &output_path)?,
     }
 
     println!("Generated {}", output_path.display());

@@ -7,7 +7,7 @@
 default:
     @just --list --unsorted
 
-# Generate input/<name>.toml into output/ (format: pdf, docx, doc)
+# Generate input/<name>.toml into output/ (format: pdf, docx, doc, ats)
 gen name format="pdf":
     @cargo run --release --quiet -- {{ name }} {{ format }}
 

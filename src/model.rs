@@ -56,6 +56,7 @@ pub struct Progression {
     pub location: String,
     pub summary: String,
     pub highlights: Vec<String>,
+    pub technologies: Vec<String>,
 }
 
 #[derive(Debug, Default, Deserialize)]
