@@ -75,6 +75,20 @@ jobs:
           -p:TrimMode=full
           -o artifacts
 
+      # "Single file" is a claim that quietly stops being true: a package
+      # shipping a native library or a content file drops it beside the binary
+      # and the publish still succeeds. Count the output instead of trusting it.
+      - name: Check the publish is a single file
+        shell: bash
+        run: |
+          set -euo pipefail
+          find artifacts -type f
+          count=$(find artifacts -type f | wc -l)
+          if [ "$count" -ne 1 ]; then
+            echo "::error::expected one published file, found $count"
+            exit 1
+          fi
+
       # TrimMode=full is the reason this step exists. A trimmed build can
       # restore, build and unit-test cleanly and still fail at run time if the
       # linker removed something the renderers reach for, so drive the actual

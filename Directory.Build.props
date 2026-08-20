@@ -10,4 +10,26 @@
     <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
 
+  <!--
+    QuestPDF's build targets copy its bundled Lato font next to the binary: 18
+    TrueType files, 12 MB, and content files cannot go into a single-file
+    publish. The renderer names its font family explicitly on every page, so
+    nothing ever resolves to Lato, and Libertinus covers a broader range than
+    Lato does — dropping it costs no glyph coverage worth having.
+
+    This lives here rather than in CvGenerator.csproj so the tests run against
+    the same fonts the shipped binary has. Left to the app project alone, the
+    suite would keep passing with a fallback face the binary does not carry.
+
+    It has to be a target: package .targets files are imported after the project
+    body, so a plain ItemGroup would be evaluated before the items exist.
+  -->
+  <Target Name="RemoveBundledLatoFont" BeforeTargets="AssignTargetPaths">
+    <ItemGroup>
+      <_BundledLatoFont Include="@(None)"
+                        Condition="$([System.String]::Copy('%(None.Link)').StartsWith('LatoFont'))" />
+      <None Remove="@(_BundledLatoFont)" />
+    </ItemGroup>
+  </Target>
+
 </Project>
