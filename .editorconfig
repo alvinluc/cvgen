@@ -2,14 +2,21 @@ root = true
 
 [*]
 charset = utf-8
-end_of_line = lf
+end_of_line = crlf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.rs]
+[*.cs]
 indent_style = space
 indent_size = 4
-max_line_length = 100
+max_line_length = 120
+csharp_new_line_before_open_brace = all
+csharp_style_namespace_declarations = file_scoped:warning
+dotnet_sort_system_directives_first = true
+
+[*.{csproj,props,targets,sln,slnx}]
+indent_style = space
+indent_size = 2
 
 [*.{toml,json,yml,yaml}]
 indent_style = space
@@ -18,6 +25,12 @@ indent_size = 2
 [justfile]
 indent_style = space
 indent_size = 4
+
+# CRLF is the default above because development happens on Windows. These are
+# the exceptions: files a POSIX shell executes, where a stray \r is a syntax
+# error. Keep this list in step with .gitattributes.
+[{justfile,*.sh,*.py,*.yml,*.yaml}]
+end_of_line = lf
 
 [*.md]
 trim_trailing_whitespace = false

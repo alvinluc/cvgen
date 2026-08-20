@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>cv-generator</AssemblyName>
+    <RootNamespace>CvGenerator</RootNamespace>
+    <Version>0.1.0</Version>
+    <Description>Generate CV and cover letter PDFs/DOCX files from TOML inputs.</Description>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="QuestPDF" Version="2026.7.3" />
+    <PackageReference Include="Tomlyn" Version="2.10.1" />
+  </ItemGroup>
+
+  <!--
+    The DOCX icons live at the repository root; regenerate them with
+    assets/icons/generate.py.
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\assets\icons\*.png" LogicalName="icon-%(Filename).png" />
+  </ItemGroup>
+
+  <!--
+    Any TrueType file dropped into Fonts/ is embedded and registered at startup.
+    Libertinus Serif (SIL OFL, see Fonts/OFL.txt) ships there so PDF output does
+    not depend on the fonts a machine happens to have installed.
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\*.ttf" LogicalName="font-%(Filename).ttf" />
+    <!-- The OFL requires its text to travel with the fonts, including in the
+         single-file binary, so it rides along as a resource rather than only
+         sitting in the repository. -->
+    <EmbeddedResource Include="Fonts\OFL.txt" LogicalName="LICENSE-fonts.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CvGenerator.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="..\assets\icons\calendar.png" Link="Assets\calendar.png" />
+    <EmbeddedResource Update="..\assets\icons\email.png" Link="Assets\email.png" />
+    <EmbeddedResource Update="..\assets\icons\link.png" Link="Assets\link.png" />
+    <EmbeddedResource Update="..\assets\icons\phone.png" Link="Assets\phone.png" />
+    <EmbeddedResource Update="..\assets\icons\pin.png" Link="Assets\pin.png" />
+  </ItemGroup>
+
+</Project>

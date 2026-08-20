@@ -2,6 +2,13 @@
 #
 # The document type (cv or cover letter) comes from the input file itself,
 # so one recipe covers both.
+#
+# Only commands worth shortening live here. Everything else is plain dotnet:
+# `dotnet build`, `dotnet test`, `dotnet format`.
+
+# just shells out to `sh` by default, which Windows has no reason to provide.
+# PowerShell ships with the OS, so use it there and leave sh in place elsewhere.
+set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
 
 # Show the available recipes
 default:
@@ -9,22 +16,26 @@ default:
 
 # Generate input/<name>.toml into output/ (format: pdf, docx, doc, ats)
 gen name format="pdf":
-    @cargo run --release --quiet -- {{ name }} {{ format }}
+    @dotnet run --project CvGenerator -c Release -v q -- {{ name }} {{ format }}
 
-# Build the release binary
-build:
-    @cargo build --release
-
-# Run fmt check, clippy, and tests
+# Run the format check, build, and tests
 check:
-    @cargo fmt --check
-    @cargo clippy --all-targets -- -D warnings
-    @cargo test
+    @dotnet format --verify-no-changes
+    @dotnet build -c Release -v q
+    @dotnet test -c Release -v q --nologo
 
-# Format the source
-fmt:
-    @cargo fmt
+# Publish a self-contained, trimmed single-file binary into ./artifacts (~14 MB)
+publish rid="win-x64":
+    @dotnet publish CvGenerator -c Release -r {{ rid }} --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:TrimMode=full -o artifacts
 
-# Remove build artefacts
+# Remove build artefacts, including the published binary
+[unix]
 clean:
-    @cargo clean
+    @dotnet clean -v q
+    @rm -rf artifacts
+
+# Remove build artefacts, including the published binary
+[windows]
+clean:
+    @dotnet clean -v q
+    @if (Test-Path artifacts) { Remove-Item -Recurse -Force artifacts }
