@@ -1,0 +1,23 @@
+# Normalise to LF in the repository; check out CRLF in the working tree, since
+# development happens on Windows and PowerShell. This is what stops git warning
+# "LF will be replaced by CRLF" on every file it touches.
+* text=auto eol=crlf
+
+# The exceptions: files a POSIX shell executes, where a stray \r is a syntax
+# error. CI runs on Linux, so these must stay LF even on a Windows checkout.
+# Keep this list in step with .editorconfig.
+justfile   text eol=lf
+*.sh       text eol=lf
+*.py       text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+
+# Binary, so git never rewrites bytes or tries to diff them as text.
+*.ttf      binary
+*.otf      binary
+*.png      binary
+*.jpg      binary
+*.ico      binary
+*.pdf      binary
+*.docx     binary
+*.zip      binary

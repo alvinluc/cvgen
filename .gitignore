@@ -1,5 +1,7 @@
-target/
+bin/
+obj/
 artifacts/
+*.user
 input/*.toml
 !input/john-doe.toml
 !input/john-doe-tech.toml

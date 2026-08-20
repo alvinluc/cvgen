@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CvGenerator.Tests/CvGenerator.Tests.csproj" />
+  <Project Path="CvGenerator/CvGenerator.csproj" />
+</Solution>
