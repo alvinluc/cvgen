@@ -53,11 +53,19 @@ just publish linux-x64
 ./artifacts/cv-generator <input-name> <format> [-i input] [-o output]
 ```
 
-No .NET runtime is required on the target machine. `artifacts/` comes to about
-39 MB: a fully trimmed 16 MB executable, QuestPDF's native Skia and qpdf
-libraries, and the Lato font QuestPDF bundles as its default. Native libraries
-and content files do not fold into a single file, so copy the folder rather than
-the `.exe` alone.
+That produces one file, about 28 MB, with no .NET runtime required on the target
+machine. Copy it anywhere and run it.
+
+Getting to a genuinely single file took two things beyond `PublishSingleFile`.
+Native libraries are excluded by default, so QuestPDF's Skia and qpdf DLLs sat
+beside the binary until `IncludeNativeLibrariesForSelfExtract` folded them in —
+they now unpack to a temporary directory on first run. And QuestPDF's build
+targets copy its bundled Lato font, 18 files and 12 MB, which content files
+cannot be bundled at all; `Directory.Build.props` removes them. The renderer
+names its font family explicitly on every page, so nothing resolves to Lato, and
+Libertinus covers a broader range than Lato does. CI counts the published files
+rather than trusting the claim, since a future package could quietly reintroduce
+one.
 
 Trimming reports no warnings, and CI drives the published binary over both
 document types to prove the linker did not remove anything the renderers reach

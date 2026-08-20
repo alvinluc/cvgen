@@ -9,6 +9,18 @@
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
+  <!--
+    Make a single-file publish actually produce a single file. Native libraries
+    are not bundled by default, which left QuestPDF's Skia and qpdf DLLs sitting
+    beside the executable; self-extract folds them in, at the cost of unpacking
+    them to a temporary directory on first run. The symbol file is dropped here
+    rather than at the command line so `just publish` and CI cannot disagree.
+  -->
+  <PropertyGroup Condition="'$(PublishSingleFile)' == 'true'">
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="QuestPDF" Version="2026.7.3" />
     <PackageReference Include="Tomlyn" Version="2.10.1" />
